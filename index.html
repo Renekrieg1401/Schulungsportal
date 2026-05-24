@@ -100,10 +100,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
 .welcome{margin-bottom:18px}
 .welcome h1{font-size:22px;font-weight:800;color:var(--tx);margin-bottom:8px;letter-spacing:-.4px}
 .welcome p{font-size:13.5px;color:var(--t2);line-height:1.72}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.stat{background:var(--sf);border:1.5px solid var(--bd);border-radius:12px;padding:14px 8px;text-align:center}
-.stat-n{font-size:26px;font-weight:800;color:var(--v4);line-height:1;margin-bottom:3px}
-.stat-l{font-size:10px;color:var(--t2);font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:20px;overflow:hidden}
+.stat{background:var(--sf);border-radius:10px;padding:8px 3px;border:1.5px solid var(--bd);text-align:center;min-width:0;overflow:hidden}
+.stat-n{font-size:20px;font-weight:800;color:var(--ac);line-height:1;margin-bottom:3px}
+.stat-l{font-size:9px;color:var(--t2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px;display:block}
 .sec-lbl{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .sec-lbl::after{content:'';flex:1;height:1.5px;background:var(--bd)}
 .dcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:18px}
@@ -395,9 +395,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
         <p>Ihr digitales Schulungsportal f&#252;r die ambulante Pflege. &Ouml;ffnen Sie die Seitenleiste &#252;ber das Men&#252;-Symbol oben links oder starten Sie direkt mit einem der Inhalte.</p>
       </div>
       <div class="stats">
-        <div class="stat"><div class="stat-n">4</div><div class="stat-l">Schulungen</div></div>
+        <div class="stat"><div class="stat-n">2</div><div class="stat-l">Schulungen</div></div>
         <div class="stat"><div class="stat-n">13</div><div class="stat-l">Expertenstandards</div></div>
-        <div class="stat"><div class="stat-n" style="font-size:17px;padding-top:5px">05/26</div><div class="stat-l">Aktueller Stand</div></div>
+        <div class="stat"><div class="stat-n">2</div><div class="stat-l">Anweisungen</div></div>
+        <div class="stat"><div class="stat-n" style="font-size:14px">05/26</div><div class="stat-l">Aktueller Stand</div></div>
       </div>
       <div class="sec-lbl">&#128230; Verf&#252;gbare Inhalte</div>
       <div class="dcards">
@@ -450,16 +451,174 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
         </div>
       </div>
 
-
-      <div class="home-footer">
-        <span>Velura &middot; Schulungsportal &middot; ambulante Pflege</span>
-        <span id="verFooter" style="color:var(--ac);font-weight:600"></span>
       </div>
-      <div id="updateSetupHint" style="display:none;margin-top:10px;padding:12px 14px;background:#FFF8E1;border:1.5px solid #F5C518;border-radius:11px;font-size:12px;color:#5A4000;line-height:1.65">
-        <strong>⚙️ Auto-Update einrichten:</strong><br>
-        Hinterlegen Sie eine <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px">velura-version.json</code> unter einer festen URL (z.B. GitHub Pages) und tragen Sie die URL im HTML bei <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px">UPDATE_CHECK_URL</code> ein. Nutzer sehen dann automatisch ein Banner wenn eine neue Version verfügbar ist.
+
+
+
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-brand">
+      <img src="data:image/png;base64,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" width="36" height="36" alt="Velura Logo" style="border-radius:9px;flex-shrink:0;display:block">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px">Velura</div>
+        <div style="font-size:9.5px;color:rgba(255,255,255,.38);margin-top:1px">Schulungsportal</div>
       </div>
     </div>
+    <button class="sb-close" onclick="closeSB()">&#10005;</button>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Dokumente</div>
+    <div class="fhd" onclick="tF(this)"><div class="ico-fld"></div><span class="fl">Schulungen</span><span class="fc">&#8250;</span></div>
+    <div class="fbody">
+      <div class="dlink" id="nav-sis" onclick="openDoc('sis',this)"><div class="ico-file"></div><span>SiS-Schulung</span></div>
+      <div class="dlink" id="nav-qpr" onclick="openDoc('qpr',this)"><div class="ico-file"></div><span>QPR-Schulung 2026</span></div>
+    </div>
+    <div class="fhd" onclick="tF(this)"><div class="ico-fld"></div><span class="fl">Arbeitsanweisung</span><span class="fc">&#8250;</span></div>
+    <div class="fbody">
+      <div class="dlink" id="nav-hygiene" onclick="openDoc('hygiene',this)"><div class="ico-file"></div><span>Hygieneschulung</span></div>
+      <div class="dlink" id="nav-kompression" onclick="openDoc('kompression',this)"><div class="ico-file"></div><span>Kompressionstherapie</span></div>
+    </div>
+    <div class="fhd" onclick="tF(this)"><div class="ico-fld"></div><span class="fl">Richtlinien / Standards</span><span class="fc">&#8250;</span></div>
+    <div class="fbody">
+      <div class="fhd" onclick="tF(this)" style="font-size:12.5px;padding:7px 10px"><div class="ico-fld" style="transform:scale(.82)"></div><span class="fl">Expertenstandards (DNQP)</span><span class="fc">&#8250;</span></div>
+      <div class="fbody2">
+        <div class="es-sb-all" onclick="openESList()"><span style="font-size:13px">&#x1F4CB;</span><span>Alle 13 Standards</span></div>
+        <div class="es-sb-entry" id="nav-es-dekubitus" onclick="openES('dekubitus',this)"><span class="es-dot" style="background:#C0392B"></span><span>#01 Dekubitus</span></div>
+        <div class="es-sb-entry" id="nav-es-entlassung" onclick="openES('entlassung',this)"><span class="es-dot" style="background:#2471A3"></span><span>#02 Entlassung</span></div>
+        <div class="es-sb-entry" id="nav-es-schmerz-akut" onclick="openES('schmerz-akut',this)"><span class="es-dot" style="background:#E67E22"></span><span>#03 Schmerz (akut)</span></div>
+        <div class="es-sb-entry" id="nav-es-schmerz-chronisch" onclick="openES('schmerz-chronisch',this)"><span class="es-dot" style="background:#BA4A00"></span><span>#04 Schmerz (chronisch)</span></div>
+        <div class="es-sb-entry" id="nav-es-sturz" onclick="openES('sturz',this)"><span class="es-dot" style="background:#7D3C98"></span><span>#05 Sturzprophylaxe</span></div>
+        <div class="es-sb-entry" id="nav-es-harnkontinenz" onclick="openES('harnkontinenz',this)"><span class="es-dot" style="background:#148F77"></span><span>#06 Harnkontinenz</span></div>
+        <div class="es-sb-entry" id="nav-es-wunden" onclick="openES('wunden',this)"><span class="es-dot" style="background:#1E8449"></span><span>#07 Chronische Wunden</span></div>
+        <div class="es-sb-entry" id="nav-es-ernaehrung" onclick="openES('ernaehrung',this)"><span class="es-dot" style="background:#B7770D"></span><span>#08 Ernährung</span></div>
+        <div class="es-sb-entry" id="nav-es-demenz" onclick="openES('demenz',this)"><span class="es-dot" style="background:#6C3483"></span><span>#09 Demenz</span></div>
+        <div class="es-sb-entry" id="nav-es-mund" onclick="openES('mund',this)"><span class="es-dot" style="background:#117A65"></span><span>#10 Mundgesundheit</span></div>
+        <div class="es-sb-entry" id="nav-es-bewegung" onclick="openES('bewegung',this)"><span class="es-dot" style="background:#1A5276"></span><span>#11 Bewegung</span></div>
+        <div class="es-sb-entry" id="nav-es-geburt" onclick="openES('geburt',this)"><span class="es-dot" style="background:#CB4335"></span><span>#12 Physiolog. Geburt</span></div>
+        <div class="es-sb-entry" id="nav-es-lymphoedem" onclick="openES('lymphoedem',this)"><span class="es-dot" style="background:#1565C0"></span><span>#13 Lymphödem</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Update Button (inside scrollable nav) ── -->
+  <div style="padding:10px 8px 4px">
+    <button id="updateBtn" onclick="checkUpdate()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;background:rgba(14,196,176,.13);border:1.5px solid rgba(14,196,176,.32);border-radius:10px;color:#0EC4B0;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s">
+      <svg id="updBtnIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+      App aktualisieren
+    </button>
+  </div>
+
+  <div class="sb-footer">
+    <span>Velura &middot; Schulungsportal</span>
+    <span id="verBadge" style="color:rgba(14,196,176,.5);font-weight:600">v05/26</span>
+  </div>
+</aside>
+
+<!-- ═══ APP SHELL ═══ -->
+<div class="shell">
+  <header class="hdr">
+    <div class="ham" onclick="openSB()"><span></span><span></span><span></span></div>
+    <div class="hdr-logo"><svg height="44" viewBox="0 0 310 44" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ncg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#09677A"/>
+      <stop offset="100%" stop-color="#043D4A"/>
+    </linearGradient>
+  </defs>
+  <!-- Logo mark background -->
+  <rect x="0" y="4" width="36" height="36" rx="9" fill="url(#ncg2)"/>
+  <ellipse cx="12" cy="13" rx="14" ry="8" fill="rgba(255,255,255,0.07)"/>
+  <!-- Cross (Cura) -->
+  <rect x="14.5" y="15" width="7" height="20" rx="3.5" fill="white"/>
+  <rect x="8" y="21.5" width="20" height="7" rx="3.5" fill="white"/>
+  <!-- Nova star -->
+  <path d="M18 11 L19.4 14 L22.5 12.5 L20 15.5 L23 17 L20 17 L18 21 L16 17 L13 17 L16 15.5 L13.5 12.5 L16.6 14 Z"
+        fill="#F5C518" opacity="0.95"/>
+  <!-- Divider -->
+  <rect x="44" y="10" width="1.5" height="24" fill="rgba(255,255,255,.18)" rx="1"/>
+  <!-- Wordmark: Nova in light, Cura in bold teal-white -->
+  <text x="54" y="26" font-family="Outfit,sans-serif" font-size="20" fill="white" letter-spacing="-0.3">
+    <tspan font-weight="300">Ve</tspan><tspan font-weight="800">lura</tspan>
+  </text>
+  <text x="54" y="38" font-family="Outfit,sans-serif" font-size="10" fill="rgba(255,255,255,.5)" letter-spacing="0.4">Schulungsportal &#xB7; ambulante Pflege</text>
+</svg></div>
+    <div class="hdr-actions">
+      
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div id="homeView" class="view on">
+      
+      <div class="welcome">
+        <h1>Willkommen bei Velura</h1>
+        <p>Ihr digitales Schulungsportal f&#252;r die ambulante Pflege. &Ouml;ffnen Sie die Seitenleiste &#252;ber das Men&#252;-Symbol oben links oder starten Sie direkt mit einem der Inhalte.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-n">2</div><div class="stat-l">Schulungen</div></div>
+        <div class="stat"><div class="stat-n">13</div><div class="stat-l">Expertenstandards</div></div>
+        <div class="stat"><div class="stat-n">2</div><div class="stat-l">Anweisungen</div></div>
+        <div class="stat"><div class="stat-n" style="font-size:14px">05/26</div><div class="stat-l">Aktueller Stand</div></div>
+      </div>
+      <div class="sec-lbl">&#128230; Verf&#252;gbare Inhalte</div>
+      <div class="dcards">
+        <div class="dcard" onclick="openDoc('sis',document.getElementById('nav-sis'))">
+          <div class="dcard-ico" style="font-size:30px">&#x1F4CB;</div>
+          <div class="dcard-name">SiS-Schulung</div>
+          <div class="dcard-desc">Strukturierte Informationssammlung &middot; 16 Folien</div>
+          <div class="dcard-tag">Schulung</div>
+        </div>
+        <div class="dcard" onclick="openDoc('qpr',document.getElementById('nav-qpr'))">
+          <div class="dcard-ico">
+            <svg width="46" height="52" viewBox="0 0 46 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Clipboard body -->
+              <rect x="3" y="7" width="40" height="45" rx="5" fill="#DCF5F2" stroke="#0A9E8E" stroke-width="1.5"/>
+              <!-- Clipboard top bar -->
+              <rect x="3" y="7" width="40" height="10" rx="5" fill="#0A9E8E"/>
+              <rect x="3" y="12" width="40" height="5" fill="#0A9E8E"/>
+              <!-- Clip -->
+              <rect x="16" y="3" width="14" height="9" rx="4" fill="#065F55" stroke="#065F55" stroke-width="1"/>
+              <rect x="19" y="5" width="8" height="5" rx="2.5" fill="#DCF5F2"/>
+              <!-- Check rows -->
+              <!-- Row 1: checkmark -->
+              <circle cx="12" cy="24" r="4" fill="#0A9E8E" opacity=".18"/>
+              <polyline points="9.5,24 11.5,26.2 15,21.8" stroke="#0A9E8E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <rect x="19" y="22" width="18" height="2.5" rx="1.25" fill="#0A9E8E" opacity=".4"/>
+              <rect x="19" y="26" width="12" height="2" rx="1" fill="#0A9E8E" opacity=".25"/>
+              <!-- Row 2: checkmark -->
+              <circle cx="12" cy="35" r="4" fill="#0A9E8E" opacity=".18"/>
+              <polyline points="9.5,35 11.5,37.2 15,32.8" stroke="#0A9E8E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <rect x="19" y="33" width="18" height="2.5" rx="1.25" fill="#0A9E8E" opacity=".4"/>
+              <rect x="19" y="37" width="10" height="2" rx="1" fill="#0A9E8E" opacity=".25"/>
+              <!-- Row 3: pending (empty circle) -->
+              <circle cx="12" cy="46" r="4" fill="none" stroke="#0A9E8E" stroke-width="1.5" opacity=".45"/>
+              <rect x="19" y="44" width="18" height="2.5" rx="1.25" fill="#0A9E8E" opacity=".25"/>
+              <rect x="19" y="48" width="14" height="2" rx="1" fill="#0A9E8E" opacity=".18"/>
+              <!-- Star badge (QPR 2026) -->
+              <circle cx="38" cy="38" r="8" fill="#F5C842" stroke="white" stroke-width="1.5"/>
+              <text x="38" y="42" font-family="Outfit,sans-serif" font-size="7.5" font-weight="800" fill="#3A2800" text-anchor="middle">26</text>
+            </svg>
+          </div>
+          <div class="dcard-name">QPR-Schulung 2026</div>
+          <div class="dcard-desc">Qualit&#228;tspr&#252;fungsrichtlinien ab 01.07.2026 &middot; 9 Folien</div>
+          <div class="dcard-tag">Schulung</div>
+        </div>
+        <div class="dcard" onclick="openESList()" style="border-left-color:#1565C0">
+          <div class="dcard-ico" style="font-size:30px">&#x1F4DA;</div>
+          <div class="dcard-name">DNQP Expertenstandards</div>
+          <div class="dcard-desc">Alle 13 nationalen Pflegestandards &middot; Klinische Referenz</div>
+          <div class="dcard-tag" style="background:#E3EFF8;color:#1565C0;border-color:rgba(21,101,192,.2)">Richtlinien</div>
+        </div>
+      </div>
+
+      </div>
+
+
+          </div>
 
     <!-- DOC VIEW -->
     <div id="docView">
@@ -692,6 +851,7 @@ function showV(id){
     var el=document.getElementById(v);if(!el)return;
     el.style.display=(v===id)?'block':'none';
     el.classList.toggle('on',v===id);
+    if(v===id) el.scrollTop=0; // reset scroll
   });
   ['docView','esDetailView'].forEach(function(v){
     var el=document.getElementById(v);if(!el)return;
