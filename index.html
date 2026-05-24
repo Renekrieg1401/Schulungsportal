@@ -33,7 +33,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
 .ov.on{display:block}
 
 /* ─── SIDEBAR ─── */
-.sidebar{position:fixed;top:0;left:calc(-1*var(--sw));width:var(--sw);height:100vh;background:var(--v1);z-index:500;display:flex;flex-direction:column;transition:left .3s cubic-bezier(.4,0,.2,1);box-shadow:10px 0 44px rgba(4,20,30,.7);border-right:1px solid rgba(255,255,255,.05)}
+.sidebar{position:fixed;top:0;left:calc(-1*var(--sw));width:var(--sw);height:100vh;height:100dvh;background:var(--v1);z-index:500;display:flex;flex-direction:column;transition:left .3s cubic-bezier(.4,0,.2,1);box-shadow:10px 0 44px rgba(4,20,30,.7);border-right:1px solid rgba(255,255,255,.05)}
 .sidebar.open{left:0}
 .sb-top{padding:16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .sb-brand{display:flex;align-items:center;gap:10px}
@@ -69,7 +69,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
 .es-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .es-sb-all{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,.62);font-size:12.5px;font-weight:600;transition:all .18s;margin-bottom:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
 .es-sb-all:hover{background:rgba(255,255,255,.1);color:#fff}
-.sb-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(255,255,255,.18);flex-shrink:0}
+.sb-footer{padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(255,255,255,.22);flex-shrink:0;display:flex;justify-content:space-between;align-items:center}
 
 /* ─── SHELL / HEADER ─── */
 .shell{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -201,13 +201,18 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
 
 /* ── Update button hover ── */
 #updateBtn:hover{background:rgba(14,196,176,.22);border-color:rgba(14,196,176,.6);color:#fff}
-#updateBtn.spin svg{animation:spin .7s linear infinite}
+#updateBtn.spin #updBtnIcon{animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* ── Update banner ── */
 .upd-banner{position:fixed;top:var(--hh);left:0;right:0;z-index:800;background:linear-gradient(90deg,#0A9E8E,#0EC4B0);color:#fff;padding:11px 16px;display:none;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
 .upd-banner.show{display:flex}
 .upd-banner p{flex:1;font-size:13px;font-weight:600}
 .upd-banner button{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:7px;color:#fff;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
+/* ── Scroll-to-top ── */
+.to-top{position:fixed;bottom:22px;right:16px;width:44px;height:44px;background:var(--v2);border:1.5px solid rgba(14,196,176,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 18px rgba(4,20,30,.4);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:700;transform:translateY(10px)}
+.to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.to-top:active{transform:scale(.92)}
+.to-top svg{width:18px;height:18px;stroke:#fff;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .toast{position:fixed;bottom:20px;right:20px;background:#0B2028;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 28px rgba(4,20,30,.4);z-index:9999;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(12px);transition:all .28s cubic-bezier(.4,0,.2,1);pointer-events:none}
 .toast.on{opacity:1;transform:translateY(0)}
 .tok{color:var(--ok);font-size:15px}
@@ -256,10 +261,6 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
       <div class="dlink" id="nav-hygiene" onclick="openDoc('hygiene',this)"><div class="ico-file"></div><span>Hygieneschulung</span></div>
       <div class="dlink" id="nav-kompression" onclick="openDoc('kompression',this)"><div class="ico-file"></div><span>Kompressionstherapie</span></div>
     </div>
-    <div class="fhd" onclick="tF(this)"><div class="ico-fld"></div><span class="fl">Assessments</span><span class="fc">&#8250;</span></div>
-    <div class="fbody"><div class="dlink ph">&#8722; Folgt demn&auml;chst&hellip;</div></div>
-    <div class="fhd" onclick="tF(this)"><div class="ico-fld"></div><span class="fl">Formulare</span><span class="fc">&#8250;</span></div>
-    <div class="fbody"><div class="dlink ph">&#8722; Folgt demn&auml;chst&hellip;</div></div>
     <div class="fhd" onclick="tF(this)"><div class="ico-fld"></div><span class="fl">Richtlinien / Standards</span><span class="fc">&#8250;</span></div>
     <div class="fbody">
       <div class="fhd" onclick="tF(this)" style="font-size:12.5px;padding:7px 10px"><div class="ico-fld" style="transform:scale(.82)"></div><span class="fl">Expertenstandards (DNQP)</span><span class="fc">&#8250;</span></div>
@@ -281,17 +282,18 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
       </div>
     </div>
   </div>
+
+  <!-- ── Update Button (inside scrollable nav) ── -->
+  <div style="padding:10px 8px 4px">
+    <button id="updateBtn" onclick="checkUpdate()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;background:rgba(14,196,176,.13);border:1.5px solid rgba(14,196,176,.32);border-radius:10px;color:#0EC4B0;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s">
+      <svg id="updBtnIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+      App aktualisieren
+    </button>
+  </div>
+
   <div class="sb-footer">
-    <div style="display:flex;flex-direction:column;gap:8px;width:100%">
-      <button id="updateBtn" onclick="checkUpdate()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 14px;background:rgba(14,196,176,.12);border:1.5px solid rgba(14,196,176,.3);border-radius:9px;color:#0EC4B0;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-        App aktualisieren
-      </button>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:9.5px;color:rgba(255,255,255,.2)">Velura &middot; Schulungsportal</span>
-        <span id="verBadge" style="font-size:9px;color:rgba(255,255,255,.2)">v06/25</span>
-      </div>
-    </div>
+    <span>Velura &middot; Schulungsportal</span>
+    <span id="verBadge" style="color:rgba(14,196,176,.5);font-weight:600">v06/25</span>
   </div>
 </aside>
 
@@ -606,6 +608,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
   <button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border-color:rgba(255,255,255,.2)">✕</button>
 </div>
 
+<button class="to-top" id="toTopBtn" onclick="scrollToTop()" aria-label="Nach oben">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
  id="toast"><span class="tok">&#10003;</span><span id="toastMsg"></span></div>
 
 <script>
@@ -750,6 +756,51 @@ async function shDoc(){
   toast('Datei heruntergeladen.');
 }
 
+/* ── Scroll-to-top ── */
+function scrollToTop(){
+  // Scroll whichever container is currently active
+  var active=[
+    document.getElementById('homeView'),
+    document.getElementById('esListView'),
+    document.querySelector('#esDetailView .es-scroll')
+  ];
+  active.forEach(function(el){
+    if(el && el.style.display!=='none' && el.style.display!==''){
+      el.scrollTo({top:0,behavior:'smooth'});
+    }
+  });
+  // Also scroll content area itself
+  document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});
+}
+
+function _initScrollWatcher(){
+  var btn=document.getElementById('toTopBtn');
+  if(!btn) return;
+  var threshold=180;
+
+  function onScroll(e){
+    var el=e.target;
+    if(el.scrollTop>threshold){
+      btn.classList.add('show');
+    } else {
+      btn.classList.remove('show');
+    }
+  }
+
+  // Watch all scrollable views
+  ['homeView','esListView'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('scroll',onScroll,{passive:true});
+  });
+
+  var esScroll=document.querySelector('#esDetailView .es-scroll');
+  if(esScroll) esScroll.addEventListener('scroll',onScroll,{passive:true});
+
+  // Iframe scroll not detectable (cross-origin) – hide btn in doc view
+  var origOpenDoc=openDoc;
+  // btn auto-hidden when docView active (no scrollable parent accessible)
+}
+
 /* ── Toast ── */
 var _tt=null;
 function toast(msg){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('on');if(_tt)clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove('on')},3000)}
@@ -802,7 +853,6 @@ function checkUpdate(){
   closeSB();
 
   if(UPDATE_CHECK_URL){
-    // Remote check
     fetch(UPDATE_CHECK_URL + '?_=' + Date.now(), {method:'GET',cache:'no-store'})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){
@@ -811,15 +861,14 @@ function checkUpdate(){
         showUpdateBanner(data.url, data.version, data.changelog);
         toast('Neue Version ' + data.version + ' verfügbar!');
       } else {
-        toast('✓ Bereits aktuell (' + APP_VER + ')');
+        doReload();
       }
     })
     .catch(function(){
       btn.classList.remove('spin');
-      toast('⚠ Keine Verbindung zum Update-Server');
+      doReload();
     });
   } else {
-    // Kein Server konfiguriert → Reload-Versuch
     setTimeout(function(){
       btn.classList.remove('spin');
       doReload();
@@ -843,25 +892,50 @@ function openUpdate(url){
 }
 
 function doReload(){
+  var inIframe=(function(){try{return window.self!==window.top;}catch(e){return true;}})();
+  if(inIframe){
+    var b=document.getElementById('updBanner');
+    b.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>'
+      +'<p style="flex:1;font-size:12.5px"><strong>Datei schlie&szlig;en &amp; neu &ouml;ffnen</strong> um die neueste Version zu laden</p>'
+      +'<button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;color:#fff;padding:7px 12px;font-size:12px;cursor:pointer">OK</button>';
+    b.classList.add('show');
+    return;
+  }
+  // Real browser / PWA / Textastic – simple reload
   toast('App wird neu geladen\u2026');
-  sv('ld', null);
-  setTimeout(function(){
-    try{
-      var u = window.location.href.split('?')[0];
-      window.location.replace(u + '?r=' + Date.now());
-    } catch(e){
-      try{ window.location.href = window.location.href; }
-      catch(e2){ showManualHint(); }
-    }
-  }, 400);
+  sv('ld',null);
+  setTimeout(function(){window.location.reload();},500);
 }
-
-function showManualHint(){
+function showUpdateBanner(url, ver, log){
   var b = document.getElementById('updBanner');
-  b.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><p>Seite schlie&szlig;en &amp; neu &ouml;ffnen f&uuml;r die neueste Version.</p><button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;color:#fff;padding:6px 12px;font-size:12px;cursor:pointer">OK</button>';
+  var logText = log ? ' – ' + log : '';
+  b.innerHTML =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>' +
+    '<p style="flex:1;font-size:12.5px"><strong>' + (ver||'Neue Version') + ' verfügbar</strong>' + logText + '</p>' +
+    (url ? '<button onclick="openUpdate(\'' + url + '\')" style="background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);border-radius:7px;color:#fff;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Öffnen</button>' : '') +
+    '<button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;color:#fff;padding:7px 10px;font-size:12px;cursor:pointer">✕</button>';
   b.classList.add('show');
 }
 
+function openUpdate(url){
+  if(url) window.open(url, '_blank');
+}
+
+function doReload(){
+  var inIframe=(function(){try{return window.self!==window.top;}catch(e){return true;}})();
+  if(inIframe){
+    var b=document.getElementById('updBanner');
+    b.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>'
+      +'<p style="flex:1;font-size:12.5px"><strong>Datei schlie&szlig;en &amp; neu &ouml;ffnen</strong> um die neueste Version zu laden</p>'
+      +'<button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;color:#fff;padding:7px 12px;font-size:12px;cursor:pointer">OK</button>';
+    b.classList.add('show');
+    return;
+  }
+  // Real browser / PWA / Textastic – simple reload
+  toast('App wird neu geladen\u2026');
+  sv('ld',null);
+  setTimeout(function(){window.location.reload();},500);
+}
 function dismissBanner(){
   document.getElementById('updBanner').classList.remove('show');
 }
@@ -872,12 +946,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('verBadge').textContent = APP_VER;
   var vf = document.getElementById('verFooter');
   if(vf) vf.textContent = APP_VER;
-  // Show setup hint if no update URL configured
   if(!UPDATE_CHECK_URL){
     var hint = document.getElementById('updateSetupHint');
-    if(hint) hint.style.display = 'block';
+    if(hint) hint.style.display = 'none';
   }
-  // Delayed auto-check (2s after start)
+  _initScrollWatcher();
   setTimeout(autoCheckUpdate, 2000);
 });
 </script>
