@@ -407,14 +407,14 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
         <div class="stat"><div class="stat-n">2</div><div class="stat-l">Schulungen</div></div>
         <div class="stat"><div class="stat-n">13</div><div class="stat-l">Expertenstandards</div></div>
         <div class="stat"><div class="stat-n">2</div><div class="stat-l">Anweisungen</div></div>
-        <div class="stat"><div class="stat-n" style="font-size:14px">05/26</div><div class="stat-l">Aktueller Stand</div></div>
+        <div class="stat"><div class="stat-n" style="font-size:13px">05/26b</div><div class="stat-l">Aktueller Stand</div></div>
       </div>
       <div class="sec-lbl">&#128230; Verf&#252;gbare Inhalte</div>
       <div class="dcards">
         <div class="dcard" onclick="openDoc('sis',document.getElementById('nav-sis'))">
           <div class="dcard-ico" style="font-size:30px">&#x1F4CB;</div>
           <div class="dcard-name">SiS-Schulung</div>
-          <div class="dcard-desc">Strukturierte Informationssammlung &middot; 16 Folien</div>
+          <div class="dcard-desc">Strukturierte Informationssammlung &middot; 18 Folien</div>
           <div class="dcard-tag">Schulung</div>
         </div>
         <div class="dcard" onclick="openDoc('qpr',document.getElementById('nav-qpr'))">
@@ -701,9 +701,16 @@ class="wnew-bg" id="wnewBg" onclick="wnewDismiss(event)">
 /* ── Cross-Origin Error Suppressor ── */
 /* Unterdrückt "Script error." aus srcdoc-Iframes im Claude.ai-Sandbox */
 window.onerror = function(msg, src, line, col, err){
-  if(!src || src === '') return true;   // Cross-Origin-Fehler → suppress
-  return false;                          // Eigene Fehler → normal weiterleiten
+  // Suppress all cross-origin sandbox errors (Claude.ai artifact viewer)
+  if(!src || src === '' || src === window.location.href) return true;
+  if(msg && (String(msg).indexOf('Script error') !== -1)) return true;
+  return false;
 };
+window.addEventListener('unhandledrejection', function(e){
+  if(!e || !e.reason) return;
+  var msg = String(e.reason.message || e.reason || '');
+  if(msg.indexOf('Script error') !== -1 || msg === '') e.preventDefault();
+}, true);
 window.addEventListener('unhandledrejection', function(e){
   if(e && e.reason && String(e.reason).indexOf('Script error') !== -1) e.preventDefault();
 });
@@ -835,23 +842,20 @@ function goESList(){openESList()}
 
 /* ── Download / Share ── */
 function scrollToTop(){
-  // Scroll whichever container is active
-  var dv = document.getElementById('docView');
-  if(dv && dv.style.display !== 'none' && dv.style.display !== ''){
-    var frame = document.getElementById('docFrame');
-    try{ frame.contentWindow.scrollTo({top:0,behavior:'smooth'}); }catch(e){}
-    return;
-  }
-  var views = [
-    document.getElementById('homeView'),
-    document.getElementById('esListView'),
-    document.querySelector('#esDetailView .es-scroll')
-  ];
-  views.forEach(function(el){
-    if(el && el.style.display !== 'none' && el.style.display !== ''){
-      el.scrollTo({top:0,behavior:'smooth'});
+  try{
+    var dv=document.getElementById('docView');
+    if(dv&&dv.style.display!=='none'&&dv.style.display!==''){
+      var frame=document.getElementById('docFrame');
+      try{if(frame&&frame.contentWindow)frame.contentWindow.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+      return;
     }
-  });
+    ['homeView','esListView'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&el.style.display!=='none')try{el.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+    });
+    var es=document.querySelector('#esDetailView .es-scroll');
+    if(es)try{es.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+  }catch(e){}
 }
 
 function _initScrollWatcher(){
@@ -918,34 +922,40 @@ function toast(msg){var t=document.getElementById('toast');document.getElementBy
 /* ── What's New ── */
 /* Einträge hier pflegen – key = Versionsnummer (= APP_VER) */
 var WHATSNEW = {
-  'v05/26': [
-    { icon:'📋', title:'SiS- & QPR-Schulung', text:'Beide Schulungen für Smartphones optimiert – jetzt vertikal scrollbar' },
-    { icon:'🧼', title:'Hygiene & Kompression', text:'Zwei neue Arbeitsanweisungen als eigene Karten auf der Startseite' },
-    { icon:'⭐', title:'Was ist neu-Overlay', text:'Beim Start automatisch über Neuerungen informiert werden' },
-    { icon:'🔄', title:'App aktualisieren', text:'Sidebar-Button hält die App auf GitHub immer aktuell' },
-    { icon:'⬆️', title:'Nach-oben-Button', text:'In allen Ansichten: Schulungen, Standards, Arbeitsanweisungen' }
+  /* Immer nur den aktuellen Versionsschlüssel pflegen.
+     Ältere Einträge können entfernt werden – sie werden nie mehr angezeigt. */
+  'v05/26b': [
+    { icon:'📋', title:'SiS – QPR 2026 konform', text:'SiS-Schulung QPR 2026-konform auf 18 Folien: Dokumentationskette, Ergebnisorientierung, Kategorie-D-Warnungen und Angehörigen-Evaluation ab 01.07.2026' },
+    { icon:'🗂️', title:'Neuer Ordner: Leitlinien', text:'ICN Ethikkodex für Pflegefachpersonen und Pflege-Charta (8 Artikel) jetzt in der Sidebar verfügbar' },
+    { icon:'⚖️', title:'QPR Bewertungsmatrix A–D', text:'Kategorie A bis D erklärt – was beim MD-Besuch ab Juli 2026 bewertet wird' },
+    { icon:'👨‍👩‍👧', title:'Angehörigen-Evaluation', text:'Neuer Prüfschwerpunkt der QPR 2026: Familiäre Belastung muss dokumentiert und adressiert sein' }
   ]
 };
 
 function wnewCheck(){
-  var seen = lv('wnew_seen','');
-  if(seen === APP_VER) return; // already seen
-  var items = WHATSNEW[APP_VER];
-  if(!items || items.length === 0) return; // nothing to show
-  // Render
-  document.getElementById('wnewVer').textContent = APP_VER;
-  var html = '';
-  items.forEach(function(it){
-    html += '<div class="wnew-item">'
-      + '<div class="wnew-dot" style="background:rgba(14,196,176,.15)">' + it.icon + '</div>'
-      + '<div class="wnew-text"><strong>' + it.title + '</strong><p>' + it.text + '</p></div>'
-      + '</div>';
-  });
-  document.getElementById('wnewBody').innerHTML = html;
-  // Show with small delay
-  setTimeout(function(){
-    document.getElementById('wnewBg').classList.add('show');
-  }, 600);
+  try{
+    var seen=lv('wnew_seen','');
+    if(seen===APP_VER) return;
+    var items=WHATSNEW[APP_VER];
+    if(!items||items.length===0) return;
+    var vEl=document.getElementById('wnewVer');
+    if(vEl) vEl.textContent=APP_VER;
+    var html='';
+    items.forEach(function(it){
+      html+='<div class="wnew-item">'
+        +'<div class="wnew-dot" style="background:rgba(14,196,176,.15)">'+it.icon+'</div>'
+        +'<div class="wnew-text"><strong>'+it.title+'</strong><p>'+it.text+'</p></div>'
+        +'</div>';
+    });
+    var bEl=document.getElementById('wnewBody');
+    if(bEl) bEl.innerHTML=html;
+    setTimeout(function(){
+      try{
+        var bg=document.getElementById('wnewBg');
+        if(bg) bg.classList.add('show');
+      }catch(e){}
+    },600);
+  }catch(e){}
 }
 
 function wnewClose(){
@@ -958,7 +968,7 @@ function wnewDismiss(e){
   if(e.target === document.getElementById('wnewBg')) wnewClose();
 }
 
-var APP_VER = 'v05/26';
+var APP_VER = 'v05/26b';
 var UPDATE_CHECK_URL = ''; /* ← Ihre URL eintragen, z.B.:
   'https://raw.githubusercontent.com/IHR-NAME/velura/main/velura-version.json'
   oder leer lassen für manuellen Modus */
@@ -1085,17 +1095,18 @@ function dismissBanner(){
 
 /* ── Init: always start on home ── */
 document.addEventListener('DOMContentLoaded',function(){
-  showV('homeView');
-  document.getElementById('verBadge').textContent = APP_VER;
-  var vf = document.getElementById('verFooter');
-  if(vf) vf.textContent = APP_VER;
-  if(!UPDATE_CHECK_URL){
-    var hint = document.getElementById('updateSetupHint');
-    if(hint) hint.style.display = 'none';
-  }
-  _initScrollWatcher();
-  setTimeout(function(){ wnewCheck(); }, 800);
-  setTimeout(autoCheckUpdate, 2500);
+  try{
+    showV('homeView');
+    var vb=document.getElementById('verBadge');
+    if(vb) vb.textContent = APP_VER;
+    var vf=document.getElementById('verFooter');
+    if(vf) vf.textContent = APP_VER;
+    var hint=document.getElementById('updateSetupHint');
+    if(hint) hint.style.display='none';
+    _initScrollWatcher();
+    setTimeout(function(){ try{wnewCheck();}catch(e){} }, 800);
+    setTimeout(function(){ try{autoCheckUpdate();}catch(e){} }, 2500);
+  }catch(e){}
 });
 </script>
 </body>
