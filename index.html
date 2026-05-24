@@ -82,13 +82,6 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
 .ham span{display:block;width:16px;height:2px;background:#fff;border-radius:1px}
 .hdr-logo{flex:1;min-width:0;display:flex;align-items:center;overflow:hidden}
 .hdr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.docact{display:none;gap:7px}
-.docact.on{display:flex}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .18s}
-.btn-dl{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.18)}
-.btn-dl:hover{background:rgba(255,255,255,.2)}
-.btn-sh{background:var(--ac);color:var(--v1);font-weight:700}
-.btn-sh:hover{background:var(--a2);color:#fff}
 
 /* ─── CONTENT AREA ─── */
 .content{flex:1;overflow:hidden;position:relative;background:var(--bg)}
@@ -329,10 +322,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
   <text x="54" y="38" font-family="Outfit,sans-serif" font-size="10" fill="rgba(255,255,255,.5)" letter-spacing="0.4">Schulungsportal &#xB7; ambulante Pflege</text>
 </svg></div>
     <div class="hdr-actions">
-      <div class="docact" id="docact">
-        <button class="btn btn-dl" onclick="dlDoc()">&#8595; Download</button>
-        <button class="btn btn-sh" onclick="shDoc()">&#8599; Teilen</button>
-      </div>
+      
     </div>
   </header>
 
@@ -672,7 +662,6 @@ function tF(el){el.classList.toggle('open');el.nextElementSibling.classList.togg
 function goHome(){
   showV('homeView');
   document.querySelectorAll('.dlink,.es-sb-entry').forEach(function(d){d.classList.remove('active')});
-  document.getElementById('docact').classList.remove('on');
   document.getElementById('docFrame').srcdoc='';
   curKey=null;sv('ld',null);
 }
@@ -683,7 +672,6 @@ function openDoc(k,navEl){
   if(navEl)navEl.classList.add('active');
   curKey='doc:'+k;
   var d=DOCS[k];
-  document.getElementById('docact').classList.add('on');
   document.getElementById('dvT').textContent=d.title;
   var slides={sis:'16',qpr:'9',hygiene:'7',kompression:'7'};
   document.getElementById('dvC').textContent=d.folder+' · '+(slides[k]||'?')+' Folien';
@@ -696,7 +684,6 @@ function openDoc(k,navEl){
 function openESList(){
   showV('esListView');
   document.querySelectorAll('.dlink,.es-sb-entry').forEach(function(d){d.classList.remove('active')});
-  document.getElementById('docact').classList.remove('on');
   sv('ld','eslist');closeSB();
 }
 
@@ -726,45 +713,11 @@ function openES(id,navEl){
   showV('esDetailView');
   var sc=document.querySelector('#esDetailView .es-scroll');
   if(sc)sc.scrollTop=0;
-  document.getElementById('docact').classList.remove('on');
   sv('ld','es:'+id);closeSB();
 }
 function goESList(){openESList()}
 
 /* ── Download / Share ── */
-function mkB(k){return new Blob([DOCS[k].html],{type:'text/html'})}
-function trigDL(k){var u=URL.createObjectURL(mkB(k));var a=document.createElement('a');a.href=u;a.download=DOCS[k].filename;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u)},2000)}
-function dlDoc(){if(!curKey||!curKey.startsWith('doc:'))return;trigDL(curKey.slice(4));toast('Download gestartet…')}
-async function shDoc(){
-  if(!curKey||!curKey.startsWith('doc:'))return;
-  var k=curKey.slice(4),d=DOCS[k];
-  var f=new File([mkB(k)],d.filename,{type:'text/html'});
-  if(navigator.canShare&&navigator.canShare({files:[f]})){
-    try{await navigator.share({files:[f],title:d.title});toast('Geteilt!');return}
-    catch(e){if(e.name==='AbortError')return}
-  }
-  trigDL(k);
-  window.location.href='mailto:?subject='+encodeURIComponent('Schulung: '+d.title)+'&body='+encodeURIComponent('Datei: '+d.filename);
-  toast('Datei heruntergeladen.');
-}
-
-/* ── Scroll-to-top ── */
-function scrollToTop(){
-  // Scroll whichever container is currently active
-  var active=[
-    document.getElementById('homeView'),
-    document.getElementById('esListView'),
-    document.querySelector('#esDetailView .es-scroll')
-  ];
-  active.forEach(function(el){
-    if(el && el.style.display!=='none' && el.style.display!==''){
-      el.scrollTo({top:0,behavior:'smooth'});
-    }
-  });
-  // Also scroll content area itself
-  document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});
-}
-
 function _initScrollWatcher(){
   var btn=document.getElementById('toTopBtn');
   if(!btn) return;
