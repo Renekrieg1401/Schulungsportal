@@ -718,6 +718,19 @@ function openES(id,navEl){
 function goESList(){openESList()}
 
 /* ── Download / Share ── */
+function scrollToTop(){
+  var active=[
+    document.getElementById('homeView'),
+    document.getElementById('esListView'),
+    document.querySelector('#esDetailView .es-scroll')
+  ];
+  active.forEach(function(el){
+    if(el && el.style.display!=='none' && el.style.display!==''){
+      el.scrollTo({top:0,behavior:'smooth'});
+    }
+  });
+}
+
 function _initScrollWatcher(){
   var btn=document.getElementById('toTopBtn');
   if(!btn) return;
