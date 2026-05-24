@@ -918,10 +918,11 @@ function toast(msg){var t=document.getElementById('toast');document.getElementBy
 /* Einträge hier pflegen – key = Versionsnummer (= APP_VER) */
 var WHATSNEW = {
   'v05/26': [
-    { icon:'📋', title:'SiS- & QPR-Schulung', text:'Beide Schulungen jetzt vertikal optimiert für Smartphones' },
-    { icon:'🔄', title:'App aktualisieren', text:'Neuer Button in der Sidebar hält die App immer aktuell' },
-    { icon:'⬆️', title:'Nach-oben-Button', text:'Schnell zurück zum Seitenanfang mit einem Tippen' },
-    { icon:'🏠', title:'Homebildschirm-App', text:'Als PWA installierbar – wie eine echte App auf dem Gerät' }
+    { icon:'📋', title:'SiS- & QPR-Schulung', text:'Beide Schulungen für Smartphones optimiert – jetzt vertikal scrollbar' },
+    { icon:'🧼', title:'Hygiene & Kompression', text:'Zwei neue Arbeitsanweisungen als eigene Karten auf der Startseite' },
+    { icon:'⭐', title:'Was ist neu-Overlay', text:'Beim Start automatisch über Neuerungen informiert werden' },
+    { icon:'🔄', title:'App aktualisieren', text:'Sidebar-Button hält die App auf GitHub immer aktuell' },
+    { icon:'⬆️', title:'Nach-oben-Button', text:'In allen Ansichten: Schulungen, Standards, Arbeitsanweisungen' }
   ]
 };
 
@@ -1092,8 +1093,8 @@ document.addEventListener('DOMContentLoaded',function(){
     if(hint) hint.style.display = 'none';
   }
   _initScrollWatcher();
-  wnewCheck();
-  setTimeout(autoCheckUpdate, 2000);
+  setTimeout(function(){ wnewCheck(); }, 800);
+  setTimeout(autoCheckUpdate, 2500);
 });
 </script>
 </body>
