@@ -449,7 +449,14 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',sans-serif
           <div class="folder-chip"><span class="chip-dot"></span>Formulare</div>
         </div>
       </div>
-      <div class="home-footer"><span>Velura &middot; Schulungsportal &middot; ambulante Pflege</span></div>
+      <div class="home-footer">
+        <span>Velura &middot; Schulungsportal &middot; ambulante Pflege</span>
+        <span id="verFooter" style="color:var(--ac);font-weight:600"></span>
+      </div>
+      <div id="updateSetupHint" style="display:none;margin-top:10px;padding:12px 14px;background:#FFF8E1;border:1.5px solid #F5C518;border-radius:11px;font-size:12px;color:#5A4000;line-height:1.65">
+        <strong>⚙️ Auto-Update einrichten:</strong><br>
+        Hinterlegen Sie eine <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px">velura-version.json</code> unter einer festen URL (z.B. GitHub Pages) und tragen Sie die URL im HTML bei <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:3px">UPDATE_CHECK_URL</code> ein. Nutzer sehen dann automatisch ein Banner wenn eine neue Version verfügbar ist.
+      </div>
     </div>
 
     <!-- DOC VIEW -->
@@ -747,46 +754,112 @@ async function shDoc(){
 var _tt=null;
 function toast(msg){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('on');if(_tt)clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove('on')},3000)}
 
-/* ── Update System ── */
-var APP_VER='v06/25';
+/* ══════════════════════════════════════════════════════
+   VELURA UPDATE SYSTEM
+   ══════════════════════════════════════════════════════
+   Setup (einmalig):
+   1. Legen Sie eine Datei "velura-version.json" unter einer
+      festen URL ab (z.B. GitHub Pages, Netlify, eigener Server).
+   2. Tragen Sie die URL unten bei UPDATE_CHECK_URL ein.
+   3. Inhalt der velura-version.json:
+      {
+        "version": "v07/25",
+        "url": "https://ihre-url.de/velura.html",
+        "changelog": "SiS-Schulung aktualisiert"
+      }
+   4. Bei jeder Änderung: JSON + HTML-Datei aktualisieren.
+      Nutzer sehen das Banner automatisch beim nächsten Start.
+   ══════════════════════════════════════════════════════ */
+var APP_VER = 'v06/25';
+var UPDATE_CHECK_URL = ''; /* ← Ihre URL eintragen, z.B.:
+  'https://raw.githubusercontent.com/IHR-NAME/velura/main/velura-version.json'
+  oder leer lassen für manuellen Modus */
 
+/* ── Auto-Check beim Start ── */
+function autoCheckUpdate(){
+  if(!UPDATE_CHECK_URL) return;
+  fetch(UPDATE_CHECK_URL + (UPDATE_CHECK_URL.includes('?') ? '&' : '?') + '_=' + Date.now(), {
+    method:'GET', cache:'no-store',
+    headers:{'Accept':'application/json'}
+  })
+  .then(function(r){ return r.ok ? r.json() : null; })
+  .then(function(data){
+    if(!data || !data.version) return;
+    sv('remote_ver', data.version);
+    sv('remote_url', data.url || '');
+    sv('remote_log', data.changelog || '');
+    if(data.version !== APP_VER){
+      showUpdateBanner(data.url, data.version, data.changelog);
+    }
+  })
+  .catch(function(){/* Netzwerkfehler – still ignorieren */});
+}
+
+/* ── Manueller Check-Button ── */
 function checkUpdate(){
-  var btn=document.getElementById('updateBtn');
+  var btn = document.getElementById('updateBtn');
   btn.classList.add('spin');
-  setTimeout(function(){
-    btn.classList.remove('spin');
-    closeSB();
-    doReload();
-  },700);
+  closeSB();
+
+  if(UPDATE_CHECK_URL){
+    // Remote check
+    fetch(UPDATE_CHECK_URL + '?_=' + Date.now(), {method:'GET',cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data){
+      btn.classList.remove('spin');
+      if(data && data.version && data.version !== APP_VER){
+        showUpdateBanner(data.url, data.version, data.changelog);
+        toast('Neue Version ' + data.version + ' verfügbar!');
+      } else {
+        toast('✓ Bereits aktuell (' + APP_VER + ')');
+      }
+    })
+    .catch(function(){
+      btn.classList.remove('spin');
+      toast('⚠ Keine Verbindung zum Update-Server');
+    });
+  } else {
+    // Kein Server konfiguriert → Reload-Versuch
+    setTimeout(function(){
+      btn.classList.remove('spin');
+      doReload();
+    }, 700);
+  }
+}
+
+function showUpdateBanner(url, ver, log){
+  var b = document.getElementById('updBanner');
+  var logText = log ? ' – ' + log : '';
+  b.innerHTML =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>' +
+    '<p style="flex:1;font-size:12.5px"><strong>' + (ver||'Neue Version') + ' verfügbar</strong>' + logText + '</p>' +
+    (url ? '<button onclick="openUpdate(\'' + url + '\')" style="background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);border-radius:7px;color:#fff;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Öffnen</button>' : '') +
+    '<button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;color:#fff;padding:7px 10px;font-size:12px;cursor:pointer">✕</button>';
+  b.classList.add('show');
+}
+
+function openUpdate(url){
+  if(url) window.open(url, '_blank');
 }
 
 function doReload(){
   toast('App wird neu geladen\u2026');
-  sv('ld',null);
+  sv('ld', null);
   setTimeout(function(){
     try{
-      // Try hard reload (works when installed as PWA / opened directly)
-      var u=window.location.href;
-      window.location.replace(u.split('?')[0]+'?r='+Date.now());
-    }catch(e){
-      // Sandbox fallback: navigate to self
-      try{window.location.href=window.location.href}
-      catch(e2){
-        // Last resort: show manual instruction
-        showReloadHint();
-      }
+      var u = window.location.href.split('?')[0];
+      window.location.replace(u + '?r=' + Date.now());
+    } catch(e){
+      try{ window.location.href = window.location.href; }
+      catch(e2){ showManualHint(); }
     }
-  },400);
+  }, 400);
 }
 
-function showReloadHint(){
-  var banner=document.getElementById('updBanner');
-  banner.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><p>Seite manuell schlie&szlig;en &amp; neu &ouml;ffnen, um die neueste Version zu laden.</p><button onclick="dismissBanner()">OK</button>';
-  document.getElementById('updBanner').classList.add('show');
-}
-
-function showUpdateBanner(){
-  document.getElementById('updBanner').classList.add('show');
+function showManualHint(){
+  var b = document.getElementById('updBanner');
+  b.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><p>Seite schlie&szlig;en &amp; neu &ouml;ffnen f&uuml;r die neueste Version.</p><button onclick="dismissBanner()" style="background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;color:#fff;padding:6px 12px;font-size:12px;cursor:pointer">OK</button>';
+  b.classList.add('show');
 }
 
 function dismissBanner(){
@@ -797,6 +870,15 @@ function dismissBanner(){
 document.addEventListener('DOMContentLoaded',function(){
   showV('homeView');
   document.getElementById('verBadge').textContent = APP_VER;
+  var vf = document.getElementById('verFooter');
+  if(vf) vf.textContent = APP_VER;
+  // Show setup hint if no update URL configured
+  if(!UPDATE_CHECK_URL){
+    var hint = document.getElementById('updateSetupHint');
+    if(hint) hint.style.display = 'block';
+  }
+  // Delayed auto-check (2s after start)
+  setTimeout(autoCheckUpdate, 2000);
 });
 </script>
 </body>
